@@ -210,7 +210,8 @@ const Contacts = () => {
     return 'NA';
   };
 
-  const getContactName = (contact) => {
+const getContactName = (contact) => {
+    if (!contact) return 'No Name';
     if (contact.firstName && contact.lastName) {
       return `${contact.firstName} ${contact.lastName}`;
     }

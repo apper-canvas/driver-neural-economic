@@ -17,11 +17,13 @@ const ContactTable = ({
   const [sortDirection, setSortDirection] = useState("asc");
 
 const filteredContacts = contacts.filter(contact => {
+    if (!contact) return false;
     const fullName = `${contact.firstName || ''} ${contact.lastName || ''}`.trim() || contact.name || '';
     const company = contact.companyName || contact.company || '';
+    const email = contact.email || '';
     
     return fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-           contact.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+           email.toLowerCase().includes(searchTerm.toLowerCase()) ||
            company.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
@@ -128,9 +130,9 @@ const filteredContacts = contacts.filter(contact => {
               >
                 <td className="px-6 py-4">
                   <div className="font-medium text-secondary-900">
-{contact.firstName && contact.lastName 
+{contact?.firstName && contact?.lastName 
                        ? `${contact.firstName} ${contact.lastName}` 
-                       : contact.name || 'No Name'
+                       : contact?.name || 'No Name'
                      }
                    </div>
                 </td>
