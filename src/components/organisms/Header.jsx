@@ -4,6 +4,7 @@ import { cn } from "@/utils/cn";
 
 const Header = ({ 
   title, 
+  count,
   onAddClick, 
   addButtonLabel = "Add", 
   addButtonIcon = "Plus",
@@ -20,8 +21,8 @@ const Header = ({
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-secondary-700 to-secondary-900 bg-clip-text text-transparent">
-            {title}
+<h1 className="text-2xl font-bold bg-gradient-to-r from-secondary-700 to-secondary-900 bg-clip-text text-transparent">
+            {title}{count !== undefined && ` (${count})`}
           </h1>
         </div>
         {onAddClick && (

@@ -1,8 +1,10 @@
-import { useState } from "react";
-import ApperIcon from "@/components/ApperIcon";
-import Button from "@/components/atoms/Button";
-import SearchBar from "@/components/molecules/SearchBar";
+import React, { useState } from "react";
 import { format } from "date-fns";
+import { cn } from "@/utils/cn";
+import ApperIcon from "@/components/ApperIcon";
+import SearchBar from "@/components/molecules/SearchBar";
+import Button from "@/components/atoms/Button";
+import Badge from "@/components/atoms/Badge";
 
 const ContactTable = ({ 
   contacts, 
@@ -47,7 +49,24 @@ const filteredContacts = contacts.filter(contact => {
     if (sortField !== field) return "ArrowUpDown";
     return sortDirection === "asc" ? "ArrowUp" : "ArrowDown";
   };
+};
 
+  const getStatusColor = (status) => {
+    switch (status?.toLowerCase()) {
+      case 'active':
+        return 'bg-green-100 text-green-800';
+      case 'inactive':
+        return 'bg-gray-100 text-gray-800';
+      case 'lead':
+        return 'bg-blue-100 text-blue-800';
+      case 'prospect':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'customer':
+        return 'bg-green-100 text-green-800';
+      default:
+        return 'bg-blue-100 text-blue-800';
+    }
+  };
   if (loading) {
     return (
       <div className="bg-white rounded-xl shadow-sm border border-secondary-200">
@@ -130,6 +149,11 @@ const filteredContacts = contacts.filter(contact => {
                   <div className="text-secondary-600">
                     {contact.company || "-"}
                   </div>
+                </td>
+<td className="px-6 py-4">
+                  <Badge className={cn("text-xs", getStatusColor(contact.status))}>
+                    {contact.status || "Lead"}
+                  </Badge>
                 </td>
                 <td className="px-6 py-4">
                   <div className="text-secondary-600 text-sm">

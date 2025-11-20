@@ -1,6 +1,6 @@
 import contactsData from "@/services/mockData/contacts.json";
 
-const STORAGE_KEY = "crm_contacts";
+const STORAGE_KEY = "crm-contacts";
 
 // Initialize localStorage with default data if empty
 const initializeStorage = () => {
