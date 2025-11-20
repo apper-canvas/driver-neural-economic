@@ -42,14 +42,44 @@ export const contactService = {
     return { ...contact };
   },
 
-  async create(contactData) {
+async create(contactData) {
     await delay(300);
     const contacts = getStoredContacts();
+    
+    // Check for duplicate email
+    const existingContact = contacts.find(c => 
+      c.email.toLowerCase() === contactData.email.toLowerCase()
+    );
+    if (existingContact) {
+      throw new Error("Contact with this email already exists");
+    }
+    
     const maxId = contacts.length > 0 ? Math.max(...contacts.map(c => c.Id)) : 0;
+    const newId = maxId + 1;
     
     const newContact = {
-      Id: maxId + 1,
-      ...contactData,
+      id: `CONT-${String(newId).padStart(4, '0')}`,
+      Id: newId,
+      firstName: contactData.firstName || "",
+      lastName: contactData.lastName || "",
+      email: contactData.email || "",
+      phone: contactData.phone || "",
+      jobTitle: contactData.jobTitle || "",
+      companyId: contactData.companyId || null,
+      companyName: contactData.companyName || "",
+      source: contactData.source || "Website",
+      status: contactData.status || "Lead",
+      address: contactData.address || {},
+      socialLinks: contactData.socialLinks || {},
+      tags: contactData.tags || [],
+      assignedTo: contactData.assignedTo || "Current User",
+      notes: contactData.notes || "",
+      createdDate: new Date().toISOString(),
+      createdBy: "Current User",
+      modifiedDate: new Date().toISOString(),
+      // Legacy fields for backward compatibility
+      name: `${contactData.firstName} ${contactData.lastName}`.trim(),
+      company: contactData.companyName || "",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };

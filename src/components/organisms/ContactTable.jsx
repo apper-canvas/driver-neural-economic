@@ -14,11 +14,14 @@ const ContactTable = ({
   const [sortField, setSortField] = useState("name");
   const [sortDirection, setSortDirection] = useState("asc");
 
-  const filteredContacts = contacts.filter(contact =>
-    contact.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    contact.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (contact.company && contact.company.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+const filteredContacts = contacts.filter(contact => {
+    const fullName = `${contact.firstName || ''} ${contact.lastName || ''}`.trim() || contact.name || '';
+    const company = contact.companyName || contact.company || '';
+    
+    return fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+           contact.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+           company.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   const sortedContacts = [...filteredContacts].sort((a, b) => {
     const aValue = a[sortField] || "";
@@ -74,11 +77,12 @@ const ContactTable = ({
         <table className="w-full">
           <thead className="bg-secondary-50 border-b border-secondary-200">
             <tr>
-              {[
+{[
                 { key: "name", label: "Name" },
                 { key: "email", label: "Email" },
                 { key: "phone", label: "Phone" },
                 { key: "company", label: "Company" },
+                { key: "status", label: "Status" },
                 { key: "createdAt", label: "Added" },
               ].map((column) => (
                 <th key={column.key} className="px-6 py-4 text-left">
@@ -106,8 +110,11 @@ const ContactTable = ({
               >
                 <td className="px-6 py-4">
                   <div className="font-medium text-secondary-900">
-                    {contact.name}
-                  </div>
+{contact.firstName && contact.lastName 
+                       ? `${contact.firstName} ${contact.lastName}` 
+                       : contact.name || 'No Name'
+                     }
+                   </div>
                 </td>
                 <td className="px-6 py-4">
                   <div className="text-secondary-600">
