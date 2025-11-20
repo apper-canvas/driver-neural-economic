@@ -1,0 +1,112 @@
+[
+  {
+    "Id": 1,
+    "name": "Alex Thompson",
+    "email": "alex.thompson@retailchain.com",
+    "company": "RetailChain Plus",
+    "status": "new",
+    "notes": "Interested in our premium CRM package. Follow up next week.",
+    "contactId": null,
+    "createdAt": "2024-02-15T10:30:00Z",
+    "updatedAt": "2024-02-15T10:30:00Z"
+  },
+  {
+    "Id": 2,
+    "name": "Maria Garcia",
+    "email": "maria.garcia@manufacturingco.com",
+    "company": "ManufacturingCo",
+    "status": "contacted",
+    "notes": "Had initial call. Requested demo for next Tuesday.",
+    "contactId": null,
+    "createdAt": "2024-02-10T14:15:00Z",
+    "updatedAt": "2024-02-14T16:30:00Z"
+  },
+  {
+    "Id": 3,
+    "name": "James Wilson",
+    "email": "j.wilson@consultingfirm.com",
+    "company": "Wilson Consulting",
+    "status": "qualified",
+    "notes": "Ready to move forward with annual subscription. Waiting for final approval.",
+    "contactId": null,
+    "createdAt": "2024-02-05T09:20:00Z",
+    "updatedAt": "2024-02-13T11:45:00Z"
+  },
+  {
+    "Id": 4,
+    "name": "Jennifer Lee",
+    "email": "jennifer.lee@techstartup.com",
+    "company": "TechStartup Inc",
+    "status": "new",
+    "notes": "Small team looking for basic CRM features. Budget conscious.",
+    "contactId": null,
+    "createdAt": "2024-02-18T11:00:00Z",
+    "updatedAt": "2024-02-18T11:00:00Z"
+  },
+  {
+    "Id": 5,
+    "name": "Kevin Brown",
+    "email": "kevin.brown@realestate.com",
+    "company": "Brown Real Estate",
+    "status": "contacted",
+    "notes": "Interested in lead tracking features. Scheduled product demo.",
+    "contactId": null,
+    "createdAt": "2024-02-08T13:45:00Z",
+    "updatedAt": "2024-02-12T09:15:00Z"
+  },
+  {
+    "Id": 6,
+    "name": "Susan Miller",
+    "email": "susan.miller@lawfirm.com",
+    "company": "Miller & Associates Law",
+    "status": "lost",
+    "notes": "Decided to go with competitor. Price was the main factor.",
+    "contactId": null,
+    "createdAt": "2024-01-28T15:30:00Z",
+    "updatedAt": "2024-02-10T14:20:00Z"
+  },
+  {
+    "Id": 7,
+    "name": "Daniel Park",
+    "email": "daniel.park@digitalagency.com",
+    "company": "Digital Agency Pro",
+    "status": "qualified",
+    "notes": "Impressed with our platform. Ready to upgrade from current solution.",
+    "contactId": null,
+    "createdAt": "2024-01-30T12:15:00Z",
+    "updatedAt": "2024-02-11T16:00:00Z"
+  },
+  {
+    "Id": 8,
+    "name": "Rachel Green",
+    "email": "rachel.green@ecommerce.com",
+    "company": "GreenLeaf E-commerce",
+    "status": "new",
+    "notes": "Large e-commerce business looking for comprehensive CRM solution.",
+    "contactId": null,
+    "createdAt": "2024-02-20T08:30:00Z",
+    "updatedAt": "2024-02-20T08:30:00Z"
+  },
+  {
+    "Id": 9,
+    "name": "Thomas Anderson",
+    "email": "thomas.anderson@nonprofit.org",
+    "company": "Community Impact Nonprofit",
+    "status": "contacted",
+    "notes": "Nonprofit organization. Discussed potential discounts for non-profit sector.",
+    "contactId": null,
+    "createdAt": "2024-02-16T10:45:00Z",
+    "updatedAt": "2024-02-18T13:30:00Z"
+  },
+  {
+    "Id": 10,
+    "name": "Nicole White",
+    "email": "nicole.white@consultancy.com",
+    "company": "Strategic Consultancy Group",
+    "status": "qualified",
+    "notes": "Excellent fit for our enterprise package. Moving to contract phase.",
+    "contactId": null,
+    "createdAt": "2024-02-01T14:00:00Z",
+    "updatedAt": "2024-02-15T10:30:00Z"
+  }
+]

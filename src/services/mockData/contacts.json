@@ -1,0 +1,74 @@
+[
+  {
+    "Id": 1,
+    "name": "John Smith",
+    "email": "john.smith@techcorp.com",
+    "phone": "(555) 123-4567",
+    "company": "TechCorp Solutions",
+    "createdAt": "2024-01-15T09:30:00Z",
+    "updatedAt": "2024-01-15T09:30:00Z"
+  },
+  {
+    "Id": 2,
+    "name": "Sarah Johnson",
+    "email": "sarah.johnson@innovatelab.com",
+    "phone": "(555) 234-5678",
+    "company": "InnovateLab Inc",
+    "createdAt": "2024-01-18T14:20:00Z",
+    "updatedAt": "2024-01-18T14:20:00Z"
+  },
+  {
+    "Id": 3,
+    "name": "Michael Chen",
+    "email": "m.chen@globalventures.com",
+    "phone": "(555) 345-6789",
+    "company": "Global Ventures",
+    "createdAt": "2024-01-22T11:45:00Z",
+    "updatedAt": "2024-01-22T11:45:00Z"
+  },
+  {
+    "Id": 4,
+    "name": "Emily Rodriguez",
+    "email": "emily.r@startupstudio.com",
+    "phone": "(555) 456-7890",
+    "company": "StartupStudio",
+    "createdAt": "2024-01-25T16:10:00Z",
+    "updatedAt": "2024-01-25T16:10:00Z"
+  },
+  {
+    "Id": 5,
+    "name": "David Wilson",
+    "email": "david.wilson@enterprisetech.com",
+    "phone": "(555) 567-8901",
+    "company": "Enterprise Tech",
+    "createdAt": "2024-02-02T10:15:00Z",
+    "updatedAt": "2024-02-02T10:15:00Z"
+  },
+  {
+    "Id": 6,
+    "name": "Lisa Thompson",
+    "email": "lisa.thompson@creativeagency.com",
+    "phone": "(555) 678-9012",
+    "company": "Creative Agency Co",
+    "createdAt": "2024-02-05T13:30:00Z",
+    "updatedAt": "2024-02-05T13:30:00Z"
+  },
+  {
+    "Id": 7,
+    "name": "Robert Kim",
+    "email": "robert.kim@financegroup.com",
+    "phone": "(555) 789-0123",
+    "company": "Finance Group Ltd",
+    "createdAt": "2024-02-08T09:45:00Z",
+    "updatedAt": "2024-02-08T09:45:00Z"
+  },
+  {
+    "Id": 8,
+    "name": "Amanda Davis",
+    "email": "amanda.davis@healthsolutions.com",
+    "phone": "(555) 890-1234",
+    "company": "Health Solutions Inc",
+    "createdAt": "2024-02-12T15:20:00Z",
+    "updatedAt": "2024-02-12T15:20:00Z"
+  }
+]
