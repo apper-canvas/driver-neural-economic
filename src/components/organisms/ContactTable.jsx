@@ -49,7 +49,6 @@ const filteredContacts = contacts.filter(contact => {
     if (sortField !== field) return "ArrowUpDown";
     return sortDirection === "asc" ? "ArrowUp" : "ArrowDown";
   };
-};
 
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
