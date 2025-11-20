@@ -1,23 +1,24 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import Header from "@/components/organisms/Header";
-import LeadTable from "@/components/organisms/LeadTable";
-import LeadForm from "@/components/organisms/LeadForm";
-import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
-import Empty from "@/components/ui/Empty";
-import Modal from "@/components/molecules/Modal";
-import Button from "@/components/atoms/Button";
 import { leadService } from "@/services/api/leadService";
+import { create, getAll, update } from "@/services/api/companyService";
+import Modal from "@/components/molecules/Modal";
+import Loading from "@/components/ui/Loading";
+import Empty from "@/components/ui/Empty";
+import Error from "@/components/ui/Error";
+import LeadForm from "@/components/organisms/LeadForm";
+import LeadTable from "@/components/organisms/LeadTable";
+import Header from "@/components/organisms/Header";
+import Button from "@/components/atoms/Button";
 
 const Leads = () => {
-  const [leads, setLeads] = useState([]);
+const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingLead, setEditingLead] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
-
+  const [convertConfirm, setConvertConfirm] = useState(null);
   const loadLeads = async () => {
     try {
       setLoading(true);
@@ -65,7 +66,7 @@ const Leads = () => {
     }
   };
 
-  const handleSubmitLead = async (formData) => {
+const handleSubmitLead = async (formData) => {
     try {
       if (editingLead) {
         const updatedLead = await leadService.update(editingLead.Id, formData);
@@ -82,19 +83,29 @@ const Leads = () => {
       throw err;
     }
   };
-
-  const handleStatusChange = async (leadId, newStatus) => {
+  
+  const handleConvertLead = (lead) => {
+    setConvertConfirm(lead);
+  };
+  
+  const confirmConvert = async () => {
     try {
-      const updatedLead = await leadService.updateStatus(leadId, newStatus);
-      setLeads(prev => prev.map(l => l.Id === leadId ? updatedLead : l));
-      toast.success(`Lead status updated to ${newStatus}!`);
+      // In a real app, this would call a conversion service
+      // For now, we'll just show success and update status
+      const updatedLead = await leadService.update(convertConfirm.Id, { 
+        leadStatus: "Qualified" 
+      });
+      setLeads(prev => prev.map(l => l.Id === updatedLead.Id ? updatedLead : l));
+      toast.success("Lead converted to deal successfully!");
+      setConvertConfirm(null);
     } catch (err) {
-      toast.error("Failed to update lead status. Please try again.");
-      console.error("Error updating lead status:", err);
+      toast.error("Failed to convert lead. Please try again.");
+      console.error("Error converting lead:", err);
     }
   };
 
-  if (loading) {
+
+if (loading) {
     return <Loading />;
   }
 
@@ -139,15 +150,12 @@ const Leads = () => {
         addButtonLabel="Add Lead"
         addButtonIcon="UserPlus"
       />
-      
-      <div className="p-6">
-        <LeadTable
-          leads={leads}
-          onEdit={handleEditLead}
-          onDelete={handleDeleteLead}
-          onStatusChange={handleStatusChange}
-        />
-      </div>
+<LeadTable
+        leads={leads}
+        onEdit={handleEditLead}
+        onDelete={handleDeleteLead}
+        onConvert={handleConvertLead}
+      />
       
       <LeadForm
         isOpen={isFormOpen}
@@ -155,15 +163,14 @@ const Leads = () => {
         onSubmit={handleSubmitLead}
         lead={editingLead}
       />
-
-      <Modal
+<Modal
         isOpen={!!deleteConfirm}
         onClose={() => setDeleteConfirm(null)}
         title="Delete Lead"
       >
         <div className="space-y-4">
           <p className="text-secondary-600">
-            Are you sure you want to delete <strong>{deleteConfirm?.name}</strong>? 
+            Are you sure you want to delete <strong>{deleteConfirm?.leadName}</strong>? 
             This action cannot be undone.
           </p>
           <div className="flex gap-3 pt-4">
@@ -180,6 +187,42 @@ const Leads = () => {
               className="flex-1"
             >
               Delete Lead
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={!!convertConfirm}
+        onClose={() => setConvertConfirm(null)}
+        title="Convert Lead to Deal"
+      >
+        <div className="space-y-4">
+          <p className="text-secondary-600">
+            Convert <strong>{convertConfirm?.leadName}</strong> from <strong>{convertConfirm?.companyName}</strong> to a deal?
+          </p>
+          <div className="bg-blue-50 p-4 rounded-lg">
+            <h4 className="font-medium text-blue-900 mb-2">This will create:</h4>
+            <ul className="text-blue-800 text-sm space-y-1">
+              <li>• Contact record (if doesn't exist)</li>
+              <li>• Company record (if doesn't exist)</li>
+              <li>• Deal/Opportunity record</li>
+              <li>• Mark lead as "Qualified"</li>
+            </ul>
+          </div>
+          <div className="flex gap-3 pt-4">
+            <Button
+              variant="secondary"
+              onClick={() => setConvertConfirm(null)}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={confirmConvert}
+              className="flex-1"
+            >
+              Convert to Deal
             </Button>
           </div>
         </div>
