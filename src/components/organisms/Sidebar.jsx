@@ -14,6 +14,11 @@ const Sidebar = ({ isOpen, onClose, className, ...props }) => {
       path: "/contacts", 
       icon: "Users" 
     },
+{ 
+      name: "Companies", 
+      path: "/companies", 
+      icon: "Building2" 
+    },
     { 
       name: "Leads", 
       path: "/leads", 

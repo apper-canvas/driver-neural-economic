@@ -4,6 +4,7 @@ import Layout from "@/components/organisms/Layout";
 
 const Dashboard = lazy(() => import("@/components/pages/Dashboard"));
 const Contacts = lazy(() => import("@/components/pages/Contacts"));
+const Companies = lazy(() => import("@/components/pages/Companies"));
 const Leads = lazy(() => import("@/components/pages/Leads"));
 const NotFound = lazy(() => import("@/components/pages/NotFound"));
 
@@ -33,6 +34,14 @@ const mainRoutes = [
     element: (
       <Suspense fallback={<LoadingFallback />}>
         <Contacts />
+      </Suspense>
+    ),
+  },
+{
+    path: "companies",
+    element: (
+      <Suspense fallback={<LoadingFallback />}>
+        <Companies />
       </Suspense>
     ),
   },
