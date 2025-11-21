@@ -30,10 +30,15 @@ const Sidebar = ({ isOpen, onClose, className, ...props }) => {
       path: "/leads", 
 icon: "TrendingUp" 
     },
-    {
+{
       name: "Tasks",
-      href: "/tasks",
+      path: "/tasks",
       icon: "CheckSquare"
+    },
+    {
+      name: "Calendar",
+      path: "/calendar",
+      icon: "Calendar"
     },
   ];
   return (
