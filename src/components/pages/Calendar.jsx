@@ -39,10 +39,10 @@ const [tasks, setTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
   const [showTaskDetail, setShowTaskDetail] = useState(false);
 
-  // Mini calendar state
+// Mini calendar state
   const [miniCalendarDate, setMiniCalendarDate] = useState(new Date());
   useEffect(() => {
-    loadTasks();
+    loadData();
   }, []);
 
 const loadData = async () => {
@@ -220,10 +220,8 @@ const isToday = isSameDay(date, new Date());
       </div>
     );
   };
-
-  if (loading) return <Loading />;
-  if (error) return <Error message={error} onRetry={loadTasks} />;
-
+if (loading) return <Loading />;
+  if (error) return <Error message={error} onRetry={loadData} />;
   return (
     <div className="min-h-screen bg-secondary-50">
       <div className="flex h-screen">
