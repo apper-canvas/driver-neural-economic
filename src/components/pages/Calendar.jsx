@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Calendar as BigCalendar, momentLocalizer } from 'react-big-calendar';
-import moment from 'moment';
+import { Calendar as BigCalendar, dateFnsLocalizer } from 'react-big-calendar';
+import { format, parse, startOfWeek, getDay, add, sub, startOfMonth, startOfDay, isSameDay, addDays } from 'date-fns';
+import { enUS } from 'date-fns/locale';
 import { toast } from 'react-toastify';
 import ApperIcon from '@/components/ApperIcon';
 import Button from '@/components/atoms/Button';
@@ -11,7 +12,15 @@ import taskService from '@/services/api/taskService';
 import { cn } from '@/utils/cn';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
-const localizer = momentLocalizer(moment);
+const localizer = dateFnsLocalizer({
+  format,
+  parse,
+  startOfWeek,
+  getDay,
+  locales: {
+    'en-US': enUS,
+  },
+});
 
 const Calendar = () => {
   const [tasks, setTasks] = useState([]);
@@ -46,7 +55,7 @@ const Calendar = () => {
   };
 
   const events = useMemo(() => {
-    return tasks.map(task => ({
+return tasks.map(task => ({
       id: task.Id,
       title: task.title,
       start: new Date(`${task.dueDate}${task.dueTime ? `T${task.dueTime}` : 'T09:00'}`),
@@ -70,8 +79,8 @@ const Calendar = () => {
     try {
       const updatedTask = {
         ...event.resource,
-        dueDate: moment(start).format('YYYY-MM-DD'),
-        dueTime: event.allDay ? '' : moment(start).format('HH:mm')
+dueDate: format(start, 'yyyy-MM-dd'),
+        dueTime: event.allDay ? '' : format(start, 'HH:mm')
       };
       
       await taskService.update(event.resource.Id, updatedTask);
@@ -124,24 +133,24 @@ const Calendar = () => {
 
   const formats = {
     timeGutterFormat: 'h:mm A',
-    eventTimeRangeFormat: ({ start, end }) => 
-      `${moment(start).format('h:mm A')} - ${moment(end).format('h:mm A')}`,
-    dayHeaderFormat: 'ddd M/D',
+eventTimeRangeFormat: ({ start, end }) => 
+      `${format(start, 'h:mm a')} - ${format(end, 'h:mm a')}`,
+    dayHeaderFormat: 'eee M/d',
     dayRangeHeaderFormat: ({ start, end }) => 
-      `${moment(start).format('MMM D')} - ${moment(end).format('MMM D, YYYY')}`,
-    monthHeaderFormat: 'MMMM YYYY'
+      `${format(start, 'MMM d')} - ${format(end, 'MMM d, yyyy')}`,
+    monthHeaderFormat: 'MMMM yyyy'
   };
 
   // Mini calendar helpers
   const getMiniCalendarEvents = (date) => {
-    const dateStr = moment(date).format('YYYY-MM-DD');
+const dateStr = format(date, 'yyyy-MM-dd');
     return tasks.filter(task => task.dueDate === dateStr);
   };
 
   const renderMiniCalendarDay = (date) => {
     const hasEvents = getMiniCalendarEvents(date).length > 0;
-    const isToday = moment(date).isSame(moment(), 'day');
-    const isSelected = moment(date).isSame(moment(miniCalendarDate), 'day');
+const isToday = isSameDay(date, new Date());
+    const isSelected = isSameDay(date, miniCalendarDate);
 
     return (
       <div
@@ -200,16 +209,16 @@ const Calendar = () => {
             <div className="mb-4">
               <div className="flex items-center justify-between mb-3">
                 <button
-                  onClick={() => setMiniCalendarDate(moment(miniCalendarDate).subtract(1, 'month').toDate())}
+onClick={() => setMiniCalendarDate(sub(miniCalendarDate, { months: 1 }))}
                   className="p-1 hover:bg-secondary-100 rounded"
                 >
                   <ApperIcon name="ChevronLeft" size={16} />
                 </button>
-                <h3 className="font-semibold text-secondary-900">
-                  {moment(miniCalendarDate).format('MMMM YYYY')}
+<h3 className="font-semibold text-secondary-900">
+                  {format(miniCalendarDate, 'MMMM yyyy')}
                 </h3>
                 <button
-                  onClick={() => setMiniCalendarDate(moment(miniCalendarDate).add(1, 'month').toDate())}
+                  onClick={() => setMiniCalendarDate(add(miniCalendarDate, { months: 1 }))}
                   className="p-1 hover:bg-secondary-100 rounded"
                 >
                   <ApperIcon name="ChevronRight" size={16} />
@@ -224,13 +233,13 @@ const Calendar = () => {
                   </div>
                 ))}
                 {Array.from({ length: 42 }).map((_, index) => {
-                  const startOfMonth = moment(miniCalendarDate).startOf('month');
-                  const startOfCalendar = moment(startOfMonth).startOf('week');
-                  const currentDate = moment(startOfCalendar).add(index, 'days');
+const monthStart = startOfMonth(miniCalendarDate);
+                  const calendarStart = startOfWeek(monthStart);
+                  const currentDate = addDays(calendarStart, index);
                   
                   return (
-                    <div key={index} className="flex justify-center">
-                      {renderMiniCalendarDay(currentDate.toDate())}
+<div key={index} className="flex justify-center">
+                      {renderMiniCalendarDay(currentDate)}
                     </div>
                   );
                 })}
@@ -269,21 +278,21 @@ const Calendar = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <h2 className="text-xl font-semibold text-secondary-900">
-                  {view === 'month' && moment(date).format('MMMM YYYY')}
-                  {view === 'week' && `Week of ${moment(date).startOf('week').format('MMM D, YYYY')}`}
-                  {view === 'day' && moment(date).format('dddd, MMMM D, YYYY')}
+{view === 'month' && format(date, 'MMMM yyyy')}
+                  {view === 'week' && `Week of ${format(startOfWeek(date), 'MMM d, yyyy')}`}
+                  {view === 'day' && format(date, 'EEEE, MMMM d, yyyy')}
                   {view === 'agenda' && 'Agenda'}
                 </h2>
                 
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => setDate(moment(date).subtract(1, view === 'month' ? 'month' : view === 'week' ? 'week' : 'day').toDate())}
+onClick={() => setDate(sub(date, { [view === 'month' ? 'months' : view === 'week' ? 'weeks' : 'days']: 1 }))}
                     className="p-2 hover:bg-secondary-100 rounded-lg"
                   >
                     <ApperIcon name="ChevronLeft" size={20} />
                   </button>
                   <button
-                    onClick={() => setDate(moment(date).add(1, view === 'month' ? 'month' : view === 'week' ? 'week' : 'day').toDate())}
+onClick={() => setDate(add(date, { [view === 'month' ? 'months' : view === 'week' ? 'weeks' : 'days']: 1 }))}
                     className="p-2 hover:bg-secondary-100 rounded-lg"
                   >
                     <ApperIcon name="ChevronRight" size={20} />
@@ -385,7 +394,7 @@ const Calendar = () => {
               <div className="flex justify-between">
                 <span className="text-secondary-500">Due Date:</span>
                 <span className="text-secondary-900">
-                  {moment(selectedTask.dueDate).format('MMM D, YYYY')}
+{format(new Date(selectedTask.dueDate), 'MMM d, yyyy')}
                   {selectedTask.dueTime && ` at ${selectedTask.dueTime}`}
                 </span>
               </div>
@@ -434,12 +443,12 @@ const Calendar = () => {
             <ApperIcon name="Calendar" size={48} className="mx-auto text-secondary-400 mb-4" />
             <h3 className="text-lg font-medium text-secondary-900 mb-2">Create New Event</h3>
             <p className="text-secondary-500 mb-6">
-              {selectedDate ? `For ${moment(selectedDate).format('MMMM D, YYYY')}` : 'Add a new task or meeting'}
+{selectedDate ? `For ${format(selectedDate, 'MMMM d, yyyy')}` : 'Add a new task or meeting'}
             </p>
             <Button
               onClick={() => {
                 // Navigate to tasks page with pre-filled date
-                const dateParam = selectedDate ? `?date=${moment(selectedDate).format('YYYY-MM-DD')}` : '';
+const dateParam = selectedDate ? `?date=${format(selectedDate, 'yyyy-MM-dd')}` : '';
                 window.location.href = `/tasks${dateParam}`;
               }}
               className="bg-primary-600 hover:bg-primary-700"
