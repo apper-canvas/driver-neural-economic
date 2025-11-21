@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import * as contactService from "@/services/api/contactService";
+import { contactService } from "@/services/api/contactService";
 import { toast } from "react-toastify";
-import * as companyService from "@/services/api/companyService";
-import * as dealService from "@/services/api/dealService";
+import { companyService } from "@/services/api/companyService";
+import { dealService } from "@/services/api/dealService";
 import ApperIcon from "@/components/ApperIcon";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
