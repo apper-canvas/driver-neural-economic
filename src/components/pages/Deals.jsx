@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { contactService } from "@/services/api/contactService";
 import { toast } from "react-toastify";
 import { companyService } from "@/services/api/companyService";
-import { dealService } from "@/services/api/dealService";
+import dealService from "@/services/api/dealService";
 import ApperIcon from "@/components/ApperIcon";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
