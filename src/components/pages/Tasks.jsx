@@ -11,7 +11,7 @@ import Loading from '@/components/ui/Loading';
 import Error from '@/components/ui/Error';
 import taskService from '@/services/api/taskService';
 import { contactService } from '@/services/api/contactService';
-import { companyService } from '@/services/api/companyService';
+import { getAll as getAllCompanies } from '@/services/api/companyService';
 import dealService from '@/services/api/dealService';
 import { cn } from '@/utils/cn';
 
@@ -68,10 +68,10 @@ const Tasks = () => {
       setLoading(true);
       setError(null);
       
-      const [tasksData, contactsData, companiesData, dealsData] = await Promise.all([
+const [tasksData, contactsData, companiesData, dealsData] = await Promise.all([
         taskService.getAll(),
         contactService.getAll(),
-        companyService.getAll(),
+        getAllCompanies(),
         dealService.getAll()
       ]);
       
