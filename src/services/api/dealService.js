@@ -1,6 +1,3 @@
-import React from "react";
-import { create, getAll, getById, update } from "@/services/api/companyService";
-import Error from "@/components/ui/Error";
 const STORAGE_KEY = 'crm-deals';
 
 // Mock data for deals
@@ -243,8 +240,8 @@ const dealService = {
   update,
   deleteDeal,
   getDealsByStage,
-  updateDealStage,
-getPipelineValue,
+updateDealStage,
+  getPipelineValue,
   getStageMetrics
 };
 
