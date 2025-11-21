@@ -1,19 +1,19 @@
-import { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
-import { cn } from '@/utils/cn';
-import Header from '@/components/organisms/Header';
-import DealForm from '@/components/organisms/DealForm';
-import SearchBar from '@/components/molecules/SearchBar';
-import Loading from '@/components/ui/Loading';
-import Empty from '@/components/ui/Empty';
-import Error from '@/components/ui/Error';
-import Button from '@/components/atoms/Button';
-import Badge from '@/components/atoms/Badge';
-import Select from '@/components/atoms/Select';
-import ApperIcon from '@/components/ApperIcon';
-import * as dealService from '@/services/api/dealService';
-import * as contactService from '@/services/api/contactService';
-import * as companyService from '@/services/api/companyService';
+import React, { useEffect, useState } from "react";
+import * as contactService from "@/services/api/contactService";
+import { toast } from "react-toastify";
+import * as companyService from "@/services/api/companyService";
+import * as dealService from "@/services/api/dealService";
+import ApperIcon from "@/components/ApperIcon";
+import Loading from "@/components/ui/Loading";
+import Error from "@/components/ui/Error";
+import Empty from "@/components/ui/Empty";
+import Select from "@/components/atoms/Select";
+import Button from "@/components/atoms/Button";
+import Badge from "@/components/atoms/Badge";
+import Header from "@/components/organisms/Header";
+import DealForm from "@/components/organisms/DealForm";
+import SearchBar from "@/components/molecules/SearchBar";
+import { cn } from "@/utils/cn";
 
 const Deals = () => {
   const [deals, setDeals] = useState([]);
