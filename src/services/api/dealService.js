@@ -182,7 +182,20 @@ export async function getPipelineValue() {
   const deals = await getAll();
   const activeDealStages = ['Lead', 'Qualified', 'Proposal', 'Negotiation'];
   
-  return deals
+return deals
     .filter(deal => activeDealStages.includes(deal.stage))
     .reduce((total, deal) => total + deal.amount, 0);
 }
+
+// Default export object for component imports
+const dealService = {
+  getAll,
+  getById,
+  create,
+  update,
+  deleteDeal,
+  getDealsByStage,
+  getPipelineValue
+};
+
+export default dealService;
