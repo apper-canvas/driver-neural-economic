@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { contactService } from "@/services/api/contactService";
 import { toast } from "react-toastify";
-import { companyService } from "@/services/api/companyService";
+import { getAll as getAllCompanies } from "@/services/api/companyService";
 import dealService from "@/services/api/dealService";
 import ApperIcon from "@/components/ApperIcon";
 import Loading from "@/components/ui/Loading";
@@ -34,10 +34,10 @@ const Deals = () => {
     try {
       setLoading(true);
       setError(null);
-      const [dealsData, contactsData, companiesData] = await Promise.all([
+const [dealsData, contactsData, companiesData] = await Promise.all([
         dealService.getAll(),
         contactService.getAll(),
-        companyService.getAll()
+        getAllCompanies()
       ]);
       setDeals(dealsData);
       setContacts(contactsData);
