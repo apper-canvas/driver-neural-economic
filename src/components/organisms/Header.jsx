@@ -8,11 +8,12 @@ const Header = ({
   onAddClick, 
   addButtonLabel = "Add", 
   addButtonIcon = "Plus",
+  children,
   className,
   ...props 
 }) => {
   return (
-    <header 
+<header 
       className={cn(
         "bg-white border-b border-secondary-200 px-6 py-4 shadow-sm",
         className
@@ -21,19 +22,22 @@ const Header = ({
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-<h1 className="text-2xl font-bold bg-gradient-to-r from-secondary-700 to-secondary-900 bg-clip-text text-transparent">
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-secondary-700 to-secondary-900 bg-clip-text text-transparent">
             {title}{count !== undefined && ` (${count})`}
           </h1>
         </div>
-        {onAddClick && (
-          <Button 
-            onClick={onAddClick}
-            icon={addButtonIcon}
-            className="shadow-lg"
-          >
-            {addButtonLabel}
-          </Button>
-        )}
+        <div className="flex items-center gap-3">
+          {children}
+          {onAddClick && (
+            <Button 
+              onClick={onAddClick}
+              icon={addButtonIcon}
+              className="shadow-lg"
+            >
+              {addButtonLabel}
+            </Button>
+          )}
+        </div>
       </div>
     </header>
   );

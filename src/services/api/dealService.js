@@ -177,14 +177,58 @@ export async function getDealsByStage() {
   }, {});
 }
 
+export async function updateDealStage(id, newStage) {
+  await new Promise(resolve => setTimeout(resolve, 300));
+  
+  const deals = JSON.parse(localStorage.getItem('deals') || '[]');
+  const dealIndex = deals.findIndex(d => d.Id === parseInt(id));
+  
+  if (dealIndex === -1) {
+    throw new Error('Deal not found');
+  }
+
+  const stageProbabilities = {
+    'Lead': 10,
+    'Qualified': 25, 
+    'Proposal': 50,
+    'Negotiation': 75,
+    'Closed Won': 100,
+    'Closed Lost': 0
+  };
+
+  deals[dealIndex] = {
+    ...deals[dealIndex],
+    stage: newStage,
+    probability: stageProbabilities[newStage] || deals[dealIndex].probability,
+    updatedAt: new Date().toISOString()
+  };
+
+  localStorage.setItem('deals', JSON.stringify(deals));
+  return deals[dealIndex];
+}
+
 // Helper function to calculate total pipeline value
 export async function getPipelineValue() {
   const deals = await getAll();
   const activeDealStages = ['Lead', 'Qualified', 'Proposal', 'Negotiation'];
   
-return deals
+  return deals
     .filter(deal => activeDealStages.includes(deal.stage))
     .reduce((total, deal) => total + deal.amount, 0);
+}
+
+export async function getStageMetrics() {
+  const deals = await getAll();
+  const stages = ['Lead', 'Qualified', 'Proposal', 'Negotiation', 'Closed Won', 'Closed Lost'];
+  
+  return stages.reduce((acc, stage) => {
+    const stageDeals = deals.filter(deal => deal.stage === stage);
+    acc[stage] = {
+      count: stageDeals.length,
+      value: stageDeals.reduce((sum, deal) => sum + deal.amount, 0)
+    };
+    return acc;
+  }, {});
 }
 
 // Default export object for component imports
