@@ -1,3 +1,6 @@
+import React from "react";
+import { create, getAll, getById, update } from "@/services/api/companyService";
+import Error from "@/components/ui/Error";
 const STORAGE_KEY = 'crm-deals';
 
 // Mock data for deals
@@ -178,9 +181,9 @@ export async function getDealsByStage() {
 }
 
 export async function updateDealStage(id, newStage) {
-  await new Promise(resolve => setTimeout(resolve, 300));
+  await delay(300);
   
-  const deals = JSON.parse(localStorage.getItem('deals') || '[]');
+  const deals = getStoredDeals();
   const dealIndex = deals.findIndex(d => d.Id === parseInt(id));
   
   if (dealIndex === -1) {
@@ -200,11 +203,11 @@ export async function updateDealStage(id, newStage) {
     ...deals[dealIndex],
     stage: newStage,
     probability: stageProbabilities[newStage] || deals[dealIndex].probability,
-    updatedAt: new Date().toISOString()
+    modifiedDate: new Date().toISOString()
   };
 
-  localStorage.setItem('deals', JSON.stringify(deals));
-  return deals[dealIndex];
+  saveDeals(deals);
+  return { ...deals[dealIndex] };
 }
 
 // Helper function to calculate total pipeline value
@@ -232,6 +235,7 @@ export async function getStageMetrics() {
 }
 
 // Default export object for component imports
+// Default export object for component imports
 const dealService = {
   getAll,
   getById,
@@ -239,7 +243,9 @@ const dealService = {
   update,
   deleteDeal,
   getDealsByStage,
-  getPipelineValue
+  updateDealStage,
+getPipelineValue,
+  getStageMetrics
 };
 
 export default dealService;
