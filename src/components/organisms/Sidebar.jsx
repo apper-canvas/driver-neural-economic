@@ -28,7 +28,12 @@ const Sidebar = ({ isOpen, onClose, className, ...props }) => {
     { 
       name: "Leads", 
       path: "/leads", 
-      icon: "TrendingUp" 
+icon: "TrendingUp" 
+    },
+    {
+      name: "Tasks",
+      href: "/tasks",
+      icon: "CheckSquare"
     },
   ];
   return (
