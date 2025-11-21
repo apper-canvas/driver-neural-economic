@@ -1,16 +1,21 @@
-import { useState, useEffect, useMemo } from 'react';
-import { Calendar as BigCalendar, dateFnsLocalizer } from 'react-big-calendar';
-import { format, parse, startOfWeek, getDay, add, sub, startOfMonth, startOfDay, isSameDay, addDays } from 'date-fns';
-import { enUS } from 'date-fns/locale';
-import { toast } from 'react-toastify';
-import ApperIcon from '@/components/ApperIcon';
-import Button from '@/components/atoms/Button';
-import Modal from '@/components/molecules/Modal';
-import Loading from '@/components/ui/Loading';
-import Error from '@/components/ui/Error';
-import taskService from '@/services/api/taskService';
-import { cn } from '@/utils/cn';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import React, { useEffect, useMemo, useState } from "react";
+import { BigCalendar, dateFnsLocalizer } from "react-big-calendar";
+import { add, addDays, format, getDay, isSameDay, parse, startOfDay, startOfMonth, startOfWeek, sub } from "date-fns";
+import { enUS } from "date-fns/locale";
+import { toast } from "react-toastify";
+import MeetingForm from "@/components/organisms/MeetingForm";
+import meetingService from "@/services/api/meetingService";
+import { getAll as getAllCompanies, update as updateCompany } from "@/services/api/companyService";
+import { getAll as getAllDeals, update as updateDeal } from "@/services/api/dealService";
+import taskService, { getAll as getAllTasks, update as updateTask } from "@/services/api/taskService";
+import ApperIcon from "@/components/ApperIcon";
+import Loading from "@/components/ui/Loading";
+import Error from "@/components/ui/Error";
+import Button from "@/components/atoms/Button";
+import Tasks from "@/components/pages/Tasks";
+import Modal from "@/components/molecules/Modal";
+import { cn } from "@/utils/cn";
 
 const localizer = dateFnsLocalizer({
   format,
@@ -23,7 +28,8 @@ const localizer = dateFnsLocalizer({
 });
 
 const Calendar = () => {
-  const [tasks, setTasks] = useState([]);
+const [tasks, setTasks] = useState([]);
+  const [meetings, setMeetings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [view, setView] = useState('month');
@@ -35,35 +41,57 @@ const Calendar = () => {
 
   // Mini calendar state
   const [miniCalendarDate, setMiniCalendarDate] = useState(new Date());
-
   useEffect(() => {
     loadTasks();
   }, []);
 
-  const loadTasks = async () => {
+const loadData = async () => {
     try {
       setLoading(true);
       setError(null);
-      const tasksData = await taskService.getAll();
+      
+      // Load both tasks and meetings
+      const [tasksData, meetingsData] = await Promise.all([
+        taskService.getAll(),
+        meetingService.getAll()
+      ]);
+      
       setTasks(tasksData.filter(task => task.dueDate)); // Only tasks with due dates
+      setMeetings(meetingsData);
     } catch (err) {
-      console.error('Error loading tasks:', err);
+      console.error('Error loading calendar data:', err);
       setError('Failed to load calendar events. Please try again.');
     } finally {
       setLoading(false);
     }
   };
+useEffect(() => {
+    loadData();
+  }, []);
 
-  const events = useMemo(() => {
-return tasks.map(task => ({
-      id: task.Id,
+  // Format events for calendar
+const events = useMemo(() => {
+    // Combine tasks and meetings into calendar events
+    const taskEvents = tasks.map(task => ({
+      id: `task-${task.Id}`,
       title: task.title,
       start: new Date(`${task.dueDate}${task.dueTime ? `T${task.dueTime}` : 'T09:00'}`),
       end: new Date(`${task.dueDate}${task.dueTime ? `T${task.dueTime}` : 'T10:00'}`),
-      resource: task,
+      resource: { ...task, type: 'Task', eventType: 'task' },
       allDay: !task.dueTime
     }));
-  }, [tasks]);
+
+    const meetingEvents = meetings.map(meeting => ({
+      id: `meeting-${meeting.Id}`,
+      title: meeting.title,
+      start: new Date(`${meeting.startDate}T${meeting.startTime}`),
+      end: new Date(`${meeting.endDate}T${meeting.endTime}`),
+      resource: { ...meeting, eventType: 'meeting' },
+      allDay: false
+    }));
+
+    return [...taskEvents, ...meetingEvents];
+  }, [tasks, meetings]);
 
   const handleSelectSlot = ({ start }) => {
     setSelectedDate(start);
@@ -75,21 +103,41 @@ return tasks.map(task => ({
     setShowTaskDetail(true);
   };
 
-  const handleEventDrop = async ({ event, start, end }) => {
+const handleEventDrop = async ({ event, start, end }) => {
     try {
-      const updatedTask = {
-        ...event.resource,
-dueDate: format(start, 'yyyy-MM-dd'),
-        dueTime: event.allDay ? '' : format(start, 'HH:mm')
-      };
+      const { resource } = event;
       
-      await taskService.update(event.resource.Id, updatedTask);
-      await loadTasks();
+      if (resource.eventType === 'task') {
+        const updatedTask = {
+          ...resource,
+          dueDate: format(start, 'yyyy-MM-dd'),
+          dueTime: event.allDay ? '' : format(start, 'HH:mm')
+        };
+        
+        await taskService.update(resource.Id, updatedTask);
+      } else if (resource.eventType === 'meeting') {
+        const updatedMeeting = {
+          ...resource,
+          startDate: format(start, 'yyyy-MM-dd'),
+          startTime: format(start, 'HH:mm'),
+          endDate: format(end, 'yyyy-MM-dd'),
+          endTime: format(end, 'HH:mm')
+        };
+        
+        await meetingService.update(resource.Id, updatedMeeting);
+      }
+      
+      await loadData();
       toast.success('Event rescheduled successfully');
     } catch (err) {
       console.error('Error rescheduling event:', err);
       toast.error('Failed to reschedule event');
     }
+  };
+
+  const handleMeetingCreated = async () => {
+    // Reload calendar data when a new meeting is created
+    await loadData();
   };
 
   const goToToday = () => {
@@ -428,37 +476,16 @@ onClick={() => setDate(add(date, { [view === 'month' ? 'months' : view === 'week
         </Modal>
       )}
 
-      {/* Create Event Modal */}
-      {showCreateForm && (
-        <Modal
-          isOpen={showCreateForm}
-          onClose={() => {
-            setShowCreateForm(false);
-            setSelectedDate(null);
-          }}
-          title="Create New Event"
-          size="md"
-        >
-          <div className="text-center py-8">
-            <ApperIcon name="Calendar" size={48} className="mx-auto text-secondary-400 mb-4" />
-            <h3 className="text-lg font-medium text-secondary-900 mb-2">Create New Event</h3>
-            <p className="text-secondary-500 mb-6">
-{selectedDate ? `For ${format(selectedDate, 'MMMM d, yyyy')}` : 'Add a new task or meeting'}
-            </p>
-            <Button
-              onClick={() => {
-                // Navigate to tasks page with pre-filled date
-const dateParam = selectedDate ? `?date=${format(selectedDate, 'yyyy-MM-dd')}` : '';
-                window.location.href = `/tasks${dateParam}`;
-              }}
-              className="bg-primary-600 hover:bg-primary-700"
-            >
-              <ApperIcon name="Plus" size={16} />
-              Create in Tasks
-            </Button>
-          </div>
-        </Modal>
-      )}
+{/* Create Meeting Modal */}
+      <MeetingForm
+        isOpen={showCreateForm}
+        onClose={() => {
+          setShowCreateForm(false);
+          setSelectedDate(null);
+        }}
+        onSubmit={handleMeetingCreated}
+        selectedDate={selectedDate}
+      />
     </div>
   );
 };
