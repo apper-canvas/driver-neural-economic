@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import React from "react";
 import ApperIcon from "@/components/ApperIcon";
 import { cn } from "@/utils/cn";
 
@@ -20,12 +21,16 @@ const Sidebar = ({ isOpen, onClose, className, ...props }) => {
       icon: "Building2" 
     },
     { 
+      name: "Deals", 
+      path: "/deals", 
+      icon: "DollarSign" 
+    },
+    { 
       name: "Leads", 
       path: "/leads", 
       icon: "TrendingUp" 
     },
   ];
-
   return (
     <>
       {/* Desktop Sidebar */}
