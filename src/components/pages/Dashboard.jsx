@@ -87,12 +87,12 @@ const Dashboard = () => {
           <div className="space-y-4">
             {leads
               .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
-              .slice(0, 5)
+.slice(0, 5)
               .map((lead) => (
-                <div key={lead.Id} className="flex items-center justify-between p-3 bg-secondary-50 rounded-lg">
+                <div key={lead.id || lead.Id || Math.random()} className="flex items-center justify-between p-3 bg-secondary-50 rounded-lg">
                   <div>
-                    <p className="font-medium text-secondary-900">{lead.name}</p>
-                    <p className="text-sm text-secondary-600">{lead.company}</p>
+                    <p className="font-medium text-secondary-900">{lead.name || 'Unknown Lead'}</p>
+                    <p className="text-sm text-secondary-600">{lead.company || 'No Company'}</p>
                   </div>
                   <div className="text-right">
                     <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
@@ -101,7 +101,7 @@ const Dashboard = () => {
                       lead.status === "lost" ? "bg-red-100 text-red-700" :
                       "bg-blue-100 text-blue-700"
                     }`}>
-                      {lead.status.charAt(0).toUpperCase() + lead.status.slice(1)}
+                      {lead.status?.charAt(0)?.toUpperCase() + (lead.status?.slice(1) || '') || 'Unknown'}
                     </span>
                   </div>
                 </div>
