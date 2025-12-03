@@ -1,6 +1,6 @@
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import React, { useEffect, useMemo, useState } from "react";
-import { BigCalendar, dateFnsLocalizer } from "react-big-calendar";
+import { Calendar as BigCalendar, dateFnsLocalizer } from "react-big-calendar";
 import { add, addDays, format, getDay, isSameDay, parse, startOfDay, startOfMonth, startOfWeek, sub } from "date-fns";
 import { enUS } from "date-fns/locale";
 import { toast } from "react-toastify";
@@ -65,9 +65,6 @@ const loadData = async () => {
       setLoading(false);
     }
   };
-useEffect(() => {
-    loadData();
-  }, []);
 
   // Format events for calendar
 const events = useMemo(() => {
